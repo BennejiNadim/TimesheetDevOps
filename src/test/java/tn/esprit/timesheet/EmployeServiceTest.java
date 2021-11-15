@@ -2,6 +2,8 @@ package tn.esprit.timesheet;
 
 import java.util.Calendar;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,14 +28,19 @@ public class EmployeServiceTest {
 	DepartementRepository dr;
 	@Autowired
 	ContratRepository cr;
+	private static final Logger L = LogManager.getLogger(EmployeServiceTest.class);
 	@Test
 	public void testAjouterEmploye()
 	{
 		String email ="john@doe.com";
 		es.ajouterEmploye(new Employe("john", "doe",email, true, Role.CHEF_DEPARTEMENT));
+		
 		Employe e = er.findByEmail(email);
+		L.info("retrieving user ",e.getEmail());
 		assert e.getEmail().equals(email);
 		er.deleteById(e.getId());
+		L.info("deleting user ",e.getEmail() );
+		L.info("test ajouter employee done successfully");
 
 	}
 	@Test
@@ -46,6 +53,7 @@ public class EmployeServiceTest {
 		Employe e2=er.findByEmail(email);
 		assert e2.getEmail().equals(email);
 		er.deleteById(e2.getId());
+		L.info("test mettre à jour employee by Id done successfully");
 
 	}
 
@@ -59,6 +67,7 @@ public class EmployeServiceTest {
 	    	boolean actualEmployeeMaritalStatus = emp.isActif();
 	    	
 	    	assert actualEmployeeMaritalStatus;
+	    	L.info("test employee active done successfully");
 	    	
 	    }
 
@@ -73,6 +82,7 @@ public class EmployeServiceTest {
 		Contrat c = cr.findByTypeContrat("CONTRACT");
 		cr.deleteById(c.getReference());
 		assert (cr.findAll().isEmpty());
+		L.info("test delete contrat by Id done successfully");
 		
 	}
 }
